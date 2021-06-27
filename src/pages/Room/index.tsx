@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { Toast, Toaster } from '../../components/Toast';
 import { db } from '../../services/firebase';
 
 import { Button } from '../../components/Button';
@@ -44,6 +45,8 @@ export function Room() {
 
     await db.ref(`rooms/${roomId}/questions`).push(question);
 
+    let msg = 'Pergunta enviada com sucesso!';
+    Toast(false, msg);
     setNewQuestion('');
   }
 
@@ -77,6 +80,7 @@ export function Room() {
           {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
         </div>
 
+        <Toaster />
         <form onSubmit={handleSendQuestion}>
           <textarea
             placeholder="O que você quer perguntar?"

@@ -11,6 +11,7 @@ import deleteImg from '../../assets/images/delete.svg';
 import checkImg from '../../assets/images/check.svg';
 import answerImg from '../../assets/images/answer.svg';
 import { useRoom } from '../../hooks/useRoom';
+import { Toast, Toaster } from '../../components/Toast';
 
 import './style.scss';
 
@@ -31,12 +32,17 @@ export function AdminRoom() {
       endedAt: new Date(),
     });
 
+    let msg = 'Sala encerrada com sucesso!';
+    Toast(true, msg);
+
     history.push('/');
   }
 
   async function handleDeleteQuestion(questionId: string) {
     if (window.confirm('Tem certeza que deseja realizar esta ação?')) {
       await db.ref(`rooms/${roomId}/questions/${questionId}`).remove();
+      let msg = 'Mensagem deletada com sucesso!';
+      Toast(false, msg);
     }
   }
 
@@ -44,6 +50,8 @@ export function AdminRoom() {
     await db.ref(`rooms/${roomId}/questions/${questionId}`).update({
       isAnswered: true,
     });
+    let msg = 'Mensagem respondida com sucesso!';
+    Toast(false, msg);
   }
 
   async function handleHighlightQuestion(questionId: string) {
@@ -71,7 +79,7 @@ export function AdminRoom() {
           <h1>Sala {title}</h1>
           {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
         </div>
-
+        <Toaster />
         <div className="question-list">
           {questions.map((question) => {
             return (

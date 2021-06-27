@@ -10,6 +10,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { FormEvent } from 'react';
 import { db } from '../../services/firebase';
 import { useState } from 'react';
+import { Toast, Toaster } from '../../components/Toast';
 
 export function Home() {
   const history = useHistory();
@@ -19,6 +20,9 @@ export function Home() {
   async function handleCreateRoom() {
     if (!user) {
       await signInWithGoogle();
+      let msg = 'Autenticado com sucesso!';
+      Toast(false, msg);
+      return;
     }
 
     history.push('/rooms/new');
@@ -32,12 +36,15 @@ export function Home() {
     const roomRef = await db.ref(`rooms/${roomCode}`).get();
 
     if (!roomRef.exists()) {
-      alert('Esta sala não existe ou código está invalído!');
+      let msg = 'O código está invalído!';
+      Toast(true, msg);
       return;
     }
 
     if (roomRef.val().endedAt) {
-      alert('Esta sala já foi fechada');
+      let msg = 'Esta sala ja foi fechada!';
+      Toast(true, msg);
+      return;
     }
 
     history.push(`/rooms/${roomCode}`);
@@ -58,6 +65,7 @@ export function Home() {
             Crie a sua sala com o Google
           </button>
           <div className="separator">ou entre em uma sala</div>
+          <Toaster />
           <form onSubmit={handleJoinRoom}>
             <input
               type="text"

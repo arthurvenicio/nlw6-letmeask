@@ -2,6 +2,7 @@ import { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { useHistory } from 'react-router-dom';
+import { Toast, Toaster } from '../../components/Toast';
 
 import illustrationImg from '../../assets/images/illustration.svg';
 import logoImg from '../../assets/images/logo.svg';
@@ -28,7 +29,9 @@ export function NewRoom() {
       authorID: user?.id,
     });
 
-    history.push(`/rooms/${firebaseRoom.key}`);
+    let msg = 'Sala criada com sucesso!';
+    Toast(false, msg);
+    history.push(`/admin/rooms/${firebaseRoom.key}`);
   }
   return (
     <div id="page-auth">
@@ -47,6 +50,7 @@ export function NewRoom() {
           />
           <h3 id="userLogin">{user?.name}</h3>
           <h2>Criar uma nova sala</h2>
+          <Toaster />
           <form onSubmit={handleCreateRoom}>
             <input
               type="text"
